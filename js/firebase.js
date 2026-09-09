@@ -10,9 +10,10 @@ import {
   getDatabase,
   ref,
   set,
+  get,
   onValue
 } from
-  "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 
 // Firebase configuration
@@ -218,5 +219,124 @@ window.saveBuildingLoadToFirebase = function(
   );
 
   set(loadRef, state);
+
+};
+
+// ================================
+// ONE-TIME IT/BSBA DATA MIGRATION
+// ================================
+
+window.migrateITBSBAData = function() {
+
+  const oldRef =
+    ref(database, "buildings/it-bsba");
+
+  get(oldRef)
+    .then(function(snapshot) {
+
+      if (!snapshot.exists()) {
+
+        console.log(
+          "No existing it-bsba data found."
+        );
+
+        return;
+
+      }
+
+      const oldData =
+        snapshot.val();
+
+      console.log(
+        "Existing IT/BSBA data found:",
+        oldData
+      );
+
+      // ================================
+      // BSIT
+      // ================================
+
+      if (oldData["building-1"]) {
+
+        set(
+          ref(
+            database,
+            "buildings/bsit/building-1"
+          ),
+          oldData["building-1"]
+        );
+
+      }
+
+      if (oldData["building-2"]) {
+
+        set(
+          ref(
+            database,
+            "buildings/bsit/building-2"
+          ),
+          oldData["building-2"]
+        );
+
+      }
+
+      // ================================
+      // BSBA
+      // ================================
+
+      if (oldData["building-3"]) {
+
+        set(
+          ref(
+            database,
+            "buildings/bsba/building-1"
+          ),
+          oldData["building-3"]
+        );
+
+      }
+
+      if (oldData["building-4"]) {
+
+        set(
+          ref(
+            database,
+            "buildings/bsba/building-2"
+          ),
+          oldData["building-4"]
+        );
+
+      }
+
+      // ================================
+      // Basketball Court
+      // ================================
+
+      if (oldData["basketball-court"]) {
+
+        set(
+          ref(
+            database,
+            "buildings/basketball-court"
+          ),
+          oldData["basketball-court"]
+        );
+
+      }
+
+      console.log(
+        "IT/BSBA migration completed."
+      );
+
+    })
+
+    .catch(function(error) {
+
+      console.error(
+        "Migration failed:",
+        error
+      );
+
+    });
 
 };

@@ -776,19 +776,61 @@ window.updateBuildingsFromFirebase =
     }
 
     // ================================
-    // IT & BSBA Department
+    // BSIT Department
     // ================================
 
-    if (data["it-bsba"]) {
+    if (data.bsit) {
 
       container.appendChild(
         createBuildingCard(
-          "it-bsba",
-          "IT & BSBA Department",
-          "bi-buildings",
-          data["it-bsba"],
+          "bsit",
+          "BSIT Department",
+          "bi-building",
+          data.bsit,
           expandedBuildings,
           expandedNested
+        )
+      );
+
+    }
+
+
+    // ================================
+    // BSBA Department
+    // ================================
+
+    if (data.bsba) {
+
+      container.appendChild(
+        createBuildingCard(
+         "bsba",
+         "BSBA Department",
+         "bi-building",
+         data.bsba,
+         expandedBuildings,
+         expandedNested
+        )
+      );
+
+    }
+
+
+    // ================================
+    // Covered Basketball Court
+    // ================================
+
+    if (data["basketball-court"]) {
+
+      container.appendChild(
+        createBuildingCard(
+         "basketball-court",
+         "Covered Basketball Court",
+         "bi-dribbble",
+         {
+           "court": data["basketball-court"]
+         },
+         expandedBuildings,
+         expandedNested
         )
       );
 
@@ -1022,13 +1064,42 @@ function createBuildingCard(
   }
 
   else if (
-    buildingId === "it-bsba"
+    buildingId === "bsit"
   ) {
 
-    createITBSBABuildings(
+    createDepartmentBuildings(
       content,
       buildingData,
+      "bsit",
       expandedNested
+    );
+
+  }
+
+  else if (
+    buildingId === "bsba"
+  ) {
+
+    createDepartmentBuildings(
+      content,
+      buildingData,
+      "bsba",
+      expandedNested
+    );
+
+  }
+
+  else if (
+    buildingId === "basketball-court"
+  ) {
+
+    content.appendChild(
+      createRoomCard(
+        "court",
+        "Covered Basketball Court",
+        buildingData.court,
+        "basketball-court/court"
+      )
     );
 
   }
@@ -1152,9 +1223,10 @@ function createCriminologyFloors(
 // IT & BSBA Buildings
 // ================================
 
-function createITBSBABuildings(
+function createDepartmentBuildings(
   container,
   buildingData,
+  departmentId,
   expandedNested
 ) {
 
@@ -1162,30 +1234,11 @@ function createITBSBABuildings(
     const buildingId in buildingData
   ) {
 
-    if (
-      buildingId ===
-      "basketball-court"
-    ) {
-
-      container.appendChild(
-        createRoomCard(
-          buildingId,
-          "Covered Basketball Court",
-          buildingData[buildingId],
-          "it-bsba/basketball-court"
-        )
-      );
-
-      continue;
-
-    }
-
-
     const nested =
       createNestedSection(
         formatName(buildingId),
         "bi-building",
-        "it-bsba-" + buildingId,
+        departmentId + "-" + buildingId,
         expandedNested
       );
 
@@ -1209,7 +1262,8 @@ function createITBSBABuildings(
           roomId,
           formatName(roomId),
           buildingRooms[roomId],
-          "it-bsba/" +
+          departmentId +
+          "/" +
           buildingId +
           "/" +
           roomId
