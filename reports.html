@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reports</title>
+
+    <!-- Bootstrap -->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Dashboard CSS -->
+
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+
+  <body>
+    <!-- Top Navbar -->
+
+    <nav class="navbar navbar-dark px-4">
+      <div class="d-flex align-items-center">
+        <img
+          src="images/TCC.jpg"
+          class="tcc-logo"
+          alt="Torres Capitol College"
+        />
+
+        <span class="navbar-brand mb-0 h1 ms-3">
+          Facility Electrical Control System
+        </span>
+      </div>
+    </nav>
+
+    <!-- Main Layout -->
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+
+        <div class="col-lg-2 col-md-3 sidebar">
+          <h5 class="mt-4 mb-4">Navigation</h5>
+
+          <a href="dashboard.html">
+            <i class="bi bi-speedometer2"></i>
+
+            Dashboard
+          </a>
+
+          <a href="monitoring.html">
+            <i class="bi bi-activity"></i>
+
+            Monitoring
+          </a>
+
+          <a href="control.html">
+            <i class="bi bi-lightbulb"></i>
+
+            Control
+          </a>
+
+          <a href="reports.html" class="active">
+            <i class="bi bi-file-earmark-bar-graph"></i>
+
+            Reports
+          </a>
+
+          <a href="settings.html">
+            <i class="bi bi-gear"></i>
+
+            Settings
+          </a>
+        </div>
+
+        <!-- Main Content -->
+
+        <div class="col-lg-10 col-md-9 content">
+          <h2>Energy Reports</h2>
+
+          <p>View energy consumption information for the facility.</p>
+
+          <hr />
+
+          <!-- Summary Cards -->
+
+          <div class="row g-4">
+            <!-- Today -->
+
+            <div class="col-lg-4">
+              <div class="card report-card">
+                <div class="card-body">
+                  <div class="report-icon text-primary">
+                    <i class="bi bi-calendar-day"></i>
+                  </div>
+
+                  <h6 class="text-muted">Energy Today</h6>
+
+                  <h2>27.8 kWh</h2>
+                </div>
+              </div>
+            </div>
+
+            <!-- Week -->
+
+            <div class="col-lg-4">
+              <div class="card report-card">
+                <div class="card-body">
+                  <div class="report-icon text-success">
+                    <i class="bi bi-calendar-week"></i>
+                  </div>
+
+                  <h6 class="text-muted">This Week</h6>
+
+                  <h2>184.6 kWh</h2>
+                </div>
+              </div>
+            </div>
+
+            <!-- Month -->
+
+            <div class="col-lg-4">
+              <div class="card report-card">
+                <div class="card-body">
+                  <div class="report-icon text-warning">
+                    <i class="bi bi-calendar-month"></i>
+                  </div>
+
+                  <h6 class="text-muted">This Month</h6>
+
+                  <h2>742.3 kWh</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Energy History -->
+
+          <div class="card mt-4">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h4 class="mb-0">Energy Consumption History</h4>
+
+                <button class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-download"></i>
+
+                  Export
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+
+                      <th>Facility Area</th>
+
+                      <th>Energy Consumption</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>August 16, 2026</td>
+
+                      <td>Registrar Office</td>
+
+                      <td>27.8 kWh</td>
+                    </tr>
+
+                    <tr>
+                      <td>August 16, 2026</td>
+
+                      <td>Library</td>
+
+                      <td>18.4 kWh</td>
+                    </tr>
+
+                    <tr>
+                      <td>August 16, 2026</td>
+
+                      <td>Computer Laboratory</td>
+
+                      <td>64.2 kWh</td>
+                    </tr>
+
+                    <tr>
+                      <td>August 16, 2026</td>
+
+                      <td>Guidance Office</td>
+
+                      <td>21.6 kWh</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Control</title>
+
+    <!-- Bootstrap -->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Dashboard CSS -->
+
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+
+  <body>
+    <!-- Top Navbar -->
+
+    <nav class="navbar navbar-dark px-4">
+      <div class="d-flex align-items-center">
+        <img
+          src="images/TCC.jpg"
+          class="tcc-logo"
+          alt="Torres Capitol College"
+        />
+
+        <span class="navbar-brand mb-0 h1 ms-3">
+          Facility Electrical Control System
+        </span>
+      </div>
+    </nav>
+
+    <!-- Main Layout -->
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+
+        <div class="col-lg-2 col-md-3 sidebar">
+          <h5 class="mt-4 mb-4">Navigation</h5>
+
+          <a href="dashboard.html">
+            <i class="bi bi-speedometer2"></i>
+
+            Dashboard
+          </a>
+
+          <a href="monitoring.html">
+            <i class="bi bi-activity"></i>
+
+            Monitoring
+          </a>
+
+          <a href="control.html" class="active">
+            <i class="bi bi-lightbulb"></i>
+
+            Control
+          </a>
+
+          <a href="reports.html">
+            <i class="bi bi-file-earmark-bar-graph"></i>
+
+            Reports
+          </a>
+
+          <a href="settings.html">
+            <i class="bi bi-gear"></i>
+
+            Settings
+          </a>
+        </div>
+
+        <!-- Main Content -->
+
+        <div class="col-lg-10 col-md-9 content">
+          <h2>Electrical Control</h2>
+
+          <p>Control the electrical loads of each facility area.</p>
+
+          <hr />
+
+          <!-- Building Control -->
+
+          <div id="buildingControlContainer">
+            <div class="text-center py-5 text-muted">
+              <div class="spinner-border mb-3" role="status"></div>
+
+              <p>Loading facility structure...</p>
+            </div>
+          </div>
+          <!-- Add / Manage Room Modal -->
+          <div
+            class="modal fade"
+            id="roomManagementModal"
+            tabindex="-1"
+            aria-labelledby="roomManagementModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="roomManagementModalLabel">
+                    Manage Facility
+                  </h5>
+
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+
+                <div class="modal-body">
+                  <p class="text-muted">
+                    Manage rooms and electrical loads for this facility.
+                  </p>
+
+                  <button
+                    type="button"
+                    class="btn btn-success w-100 mb-2"
+                    id="addRoomButton"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Add Room
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger w-100"
+                    id="deleteRoomButton"
+                  >
+                    <i class="bi bi-trash"></i>
+                    Delete Room
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <script type="module" src="js/firebase.js"></script>
+  </body>
+</html>

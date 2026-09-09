@@ -1,0 +1,266 @@
+body{
+
+    margin:0;
+
+    background:#f4f6f9;
+
+    font-family:"Segoe UI",sans-serif;
+
+}
+
+/* LEFT PANEL */
+
+.left-panel{
+
+    background:#1E3A8A;
+
+    color:white;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.left-content{
+
+    max-width:500px;
+
+}
+
+.logo-icon{
+
+    font-size:80px;
+
+    margin-bottom:25px;
+
+}
+
+.system-title{
+
+    font-weight:700;
+
+    font-size:48px;
+
+}
+
+.system-subtitle{
+
+    font-size:20px;
+
+    opacity:.85;
+
+    margin-top:20px;
+
+    margin-bottom:40px;
+
+}
+
+.version{
+
+    opacity:.7;
+
+    font-size:15px;
+
+}
+
+/* LOGIN CARD */
+
+.login-card{
+
+    width:420px;
+
+    background:white;
+
+    padding:45px;
+
+    border-radius:18px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.12);
+
+    transition:.3s;
+
+}
+
+.login-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.input-group-text{
+
+    background:white;
+
+}
+
+.form-control{
+
+    padding:12px;
+
+    border-radius:0;
+
+}
+
+.login-btn{
+
+    padding:12px;
+
+    font-weight:600;
+
+    border-radius:10px;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.forgot-link{
+
+    text-decoration:none;
+
+    font-size:14px;
+
+}
+
+/* =================================
+   TCC LOGIN BRANDING
+   ================================= */
+
+
+/* Login page background */
+
+body {
+  background-color: #f5f5f5;
+}
+
+
+/* Left branding panel */
+
+.left-panel {
+  background-color: #202124;
+
+  color: white;
+
+  position: relative;
+}
+
+
+/* Left panel content */
+
+.left-content {
+  width: 100%;
+
+  padding: 40px;
+}
+
+
+/* TCC Logo */
+
+.login-logo {
+  width: 130px;
+
+  height: 130px;
+
+  object-fit: contain;
+
+  background-color: white;
+
+  padding: 8px;
+
+  border-radius: 8px;
+
+  margin-bottom: 30px;
+}
+
+
+/* System title */
+
+.system-title {
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* System subtitle */
+
+.system-subtitle {
+  color: #cfcfcf;
+
+  max-width: 600px;
+
+  margin: 20px auto;
+
+  line-height: 1.6;
+}
+
+
+/* Version information */
+
+.version {
+  color: #999;
+
+  font-size: 13px;
+
+  margin-top: 50px;
+}
+
+
+/* Login card */
+
+.login-card {
+  width: 100%;
+
+  max-width: 430px;
+
+  background-color: white;
+
+  padding: 40px;
+
+  border-radius: 10px;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Login heading */
+
+.login-card h2 {
+  color: #202124;
+}
+
+
+/* Login button */
+
+.login-btn {
+  background-color: #2864a8;
+
+  border-color: #2864a8;
+
+  padding: 11px;
+}
+
+
+.login-btn:hover {
+  background-color: #1f4f86;
+
+  border-color: #1f4f86;
+}
+
+
+/* Forgot password */
+
+.forgot-link {
+  color: #2864a8;
+
+  text-decoration: none;
+}
+
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
