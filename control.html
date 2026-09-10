@@ -129,9 +129,7 @@
                 </div>
 
                 <div class="modal-body">
-                  <p class="text-muted">
-                    Manage rooms and electrical loads for this facility.
-                  </p>
+                  <p class="text-muted">Choose an action for this facility.</p>
 
                   <button
                     type="button"
@@ -144,11 +142,194 @@
 
                   <button
                     type="button"
-                    class="btn btn-outline-danger w-100"
-                    id="deleteRoomButton"
+                    class="btn btn-outline-primary w-100"
+                    id="manageLoadsButton"
                   >
-                    <i class="bi bi-trash"></i>
-                    Delete Room
+                    <i class="bi bi-pencil-square"></i>
+                    Manage Loads
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Add Room Modal -->
+          <div
+            class="modal fade"
+            id="addRoomModal"
+            tabindex="-1"
+            aria-labelledby="addRoomModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addRoomModalLabel">
+                    Add New Room
+                  </h5>
+
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+
+                <div class="modal-body">
+                  <!-- Floor Selection -->
+                  <div class="mb-3" id="newRoomFloorOption">
+                    <label for="newRoomFloor" class="form-label"> Floor </label>
+
+                    <select id="newRoomFloor" class="form-select">
+                      <option value="floor-1">Floor 1</option>
+
+                      <option value="floor-2">Floor 2</option>
+
+                      <option value="floor-3">Floor 3</option>
+                    </select>
+                  </div>
+
+                  <!-- Room Name -->
+                  <div class="mb-3">
+                    <label for="newRoomName" class="form-label">
+                      Room Name
+                    </label>
+
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="newRoomName"
+                      placeholder="Enter room name"
+                    />
+                  </div>
+
+                  <!-- Electrical Loads -->
+                  <label class="form-label"> Electrical Loads </label>
+
+                  <div class="form-check mb-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="newRoomLights"
+                      checked
+                    />
+
+                    <label class="form-check-label" for="newRoomLights">
+                      Lights
+                    </label>
+                  </div>
+
+                  <div class="form-check mb-3" id="newRoomOutletOption">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="newRoomOutlets"
+                    />
+
+                    <label class="form-check-label" for="newRoomOutlets">
+                      Outlet
+                    </label>
+                  </div>
+
+                  <div id="addRoomMessage" class="mt-3"></div>
+                </div>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    id="confirmAddRoomButton"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Add Room
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Manage Loads Modal -->
+          <div
+            class="modal fade"
+            id="manageLoadsModal"
+            tabindex="-1"
+            aria-labelledby="manageLoadsModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="manageLoadsModalLabel">
+                    Manage Electrical Loads
+                  </h5>
+
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+
+                <div class="modal-body">
+                  <!-- Room Selection -->
+                  <div class="mb-3">
+                    <label for="manageRoomSelect" class="form-label">
+                      Room / Area
+                    </label>
+
+                    <select id="manageRoomSelect" class="form-select"></select>
+                  </div>
+
+                  <!-- Load Selection -->
+                  <div class="mb-3">
+                    <label for="manageLoadSelect" class="form-label">
+                      Electrical Load
+                    </label>
+
+                    <select id="manageLoadSelect" class="form-select"></select>
+                  </div>
+
+                  <!-- Load Name -->
+                  <div class="mb-3">
+                    <label for="manageLoadName" class="form-label">
+                      Load Name
+                    </label>
+
+                    <input
+                      type="text"
+                      id="manageLoadName"
+                      class="form-control"
+                      placeholder="Enter load name"
+                    />
+                  </div>
+
+                  <div id="manageLoadMessage" class="mt-3"></div>
+                </div>
+
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="saveManagedLoadButton"
+                  >
+                    <i class="bi bi-save"></i>
+                    Save Changes
                   </button>
                 </div>
               </div>
