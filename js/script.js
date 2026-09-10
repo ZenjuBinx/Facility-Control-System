@@ -243,153 +243,6 @@ function updateLoad(room, load, state, label) {
 }
 
 // ================================
-// Settings - Load Labels
-// ================================
-
-function getBuildingRoomData(path) {
-  const parts = path.split("/");
-
-  let data = window.buildingsData;
-
-  if (!data) {
-    return null;
-  }
-
-  for (const part of parts) {
-    if (!data[part]) {
-      return null;
-    }
-
-    data = data[part];
-  }
-
-  return data;
-}
-
-// Load available electrical loads
-function updateLoadOptions() {
-  const roomSelect = document.getElementById("roomSelect");
-
-  const loadSelect = document.getElementById("loadSelect");
-
-  if (!roomSelect || !loadSelect) {
-    return;
-  }
-
-  const roomData = getBuildingRoomData(roomSelect.value);
-
-  loadSelect.innerHTML = "";
-
-  if (!roomData) {
-    return;
-  }
-
-  // Add Lights
-  if (roomData.lights) {
-    const lightsOption = document.createElement("option");
-
-    lightsOption.value = "lights";
-    lightsOption.textContent = "Lights";
-
-    loadSelect.appendChild(lightsOption);
-  }
-
-  // Add Outlets only if the room has outlets
-  if (roomData.outlets) {
-    const outletsOption = document.createElement("option");
-
-    outletsOption.value = "outlets";
-    outletsOption.textContent = "Outlets";
-
-    loadSelect.appendChild(outletsOption);
-  }
-
-  loadCurrentLabel();
-}
-
-// Load current label
-function loadCurrentLabel() {
-  const roomSelect = document.getElementById("roomSelect");
-
-  const loadSelect = document.getElementById("loadSelect");
-
-  const name = document.getElementById("loadName");
-
-  if (!roomSelect || !loadSelect || !name) {
-    return;
-  }
-
-  const roomData = getBuildingRoomData(roomSelect.value);
-
-  if (roomData && roomData[loadSelect.value]) {
-    name.value = roomData[loadSelect.value].label || "";
-  } else {
-    name.value = "";
-  }
-}
-
-// Save label
-function saveLabel() {
-  const room = document.getElementById("roomSelect").value;
-
-  const load = document.getElementById("loadSelect").value;
-
-  const name = document.getElementById("loadName").value.trim();
-
-  const message = document.getElementById("saveMessage");
-
-  if (name === "") {
-    message.innerHTML =
-      '<div class="alert alert-warning">' +
-      "Please enter a load name." +
-      "</div>";
-
-    return;
-  }
-
-  if (typeof saveBuildingLoadLabel !== "function") {
-    message.innerHTML =
-      '<div class="alert alert-danger">' +
-      "Firebase function is not available." +
-      "</div>";
-
-    return;
-  }
-
-  saveBuildingLoadLabel(room, load, name);
-
-  message.innerHTML =
-    '<div class="alert alert-success">' +
-    "Load name saved successfully." +
-    "</div>";
-}
-
-// Update textbox when selection changes
-
-document.addEventListener("DOMContentLoaded", function () {
-  const roomSelect = document.getElementById("roomSelect");
-
-  const loadSelect = document.getElementById("loadSelect");
-
-  if (!roomSelect || !loadSelect) {
-    return;
-  }
-
-  // Change room
-  roomSelect.addEventListener("change", function () {
-    updateLoadOptions();
-  });
-
-  // Change electrical load
-  loadSelect.addEventListener("change", function () {
-    loadCurrentLabel();
-  });
-
-  // Initial setup
-  updateLoadOptions();
-});
-
-// ================================
 // Dashboard - Lights ON Counter
 // ================================
 
@@ -529,9 +382,7 @@ window.updateBuildingsFromFirebase = function (data) {
         "basketball-court",
         "Covered Basketball Court",
         "bi-dribbble",
-        {
-          court: data["basketball-court"],
-        },
+        data["basketball-court"],
         expandedBuildings,
         expandedNested,
       ),
@@ -599,6 +450,43 @@ function createBuildingCard(
   manageButton.onclick = function (event) {
     event.stopPropagation();
 
+    // Basketball Court goes directly to Manage Loads
+    if (buildingId === "basketball-court") {
+      window.selectedBuilding = "basketball-court";
+
+      const manageLoadsModal = document.getElementById("manageLoadsModal");
+
+      if (!manageLoadsModal) {
+        return;
+      }
+
+      const manageRoomSelect = document.getElementById("manageRoomSelect");
+
+      if (manageRoomSelect) {
+        manageRoomSelect.innerHTML = "";
+
+        const option = document.createElement("option");
+
+        option.value = "basketball-court";
+        option.textContent = "Covered Basketball Court";
+
+        manageRoomSelect.appendChild(option);
+
+        manageRoomSelect.value = "basketball-court";
+      }
+
+      if (typeof populateManageLoadOptions === "function") {
+        populateManageLoadOptions();
+      }
+
+      const modal = new bootstrap.Modal(manageLoadsModal);
+
+      modal.show();
+
+      return;
+    }
+
+    // Normal facilities
     const modalElement = document.getElementById("roomManagementModal");
 
     if (!modalElement) {
@@ -607,6 +495,52 @@ function createBuildingCard(
 
     // Remember which building was selected
     window.selectedBuilding = buildingId;
+    window.selectedDepartment = buildingId;
+
+    const buildingOption = document.getElementById("manageBuildingOption");
+
+    const buildingSelect = document.getElementById("manageBuildingSelect");
+
+    if (buildingId === "bsit" || buildingId === "bsba") {
+      if (buildingOption) {
+        buildingOption.style.display = "block";
+      }
+
+      if (buildingSelect) {
+        buildingSelect.innerHTML = "";
+
+        const departmentBuildings = window.buildingsData[buildingId] || {};
+
+        for (const departmentBuildingId in departmentBuildings) {
+          const option = document.createElement("option");
+
+          option.value = departmentBuildingId;
+
+          option.textContent = formatName(departmentBuildingId);
+
+          buildingSelect.appendChild(option);
+        }
+
+        const firstBuilding = buildingSelect.value;
+
+        if (firstBuilding) {
+          window.selectedBuilding = buildingId + "/" + firstBuilding;
+        }
+
+        buildingSelect.onchange = function () {
+          window.selectedBuilding =
+            window.selectedDepartment + "/" + buildingSelect.value;
+        };
+      }
+    } else {
+      if (buildingOption) {
+        buildingOption.style.display = "none";
+      }
+
+      if (buildingSelect) {
+        buildingSelect.innerHTML = "";
+      }
+    }
 
     const modalTitle = document.getElementById("roomManagementModalLabel");
 
@@ -682,8 +616,8 @@ function createBuildingCard(
       createRoomCard(
         "court",
         "Covered Basketball Court",
-        buildingData.court,
-        "basketball-court/court",
+        buildingData,
+        "basketball-court",
       ),
     );
   }
@@ -951,7 +885,8 @@ function createNestedSection(title, icon, sectionId, expandedNested) {
 
   const header = document.createElement("div");
 
-  header.className = "p-3 d-flex justify-content-between align-items-center";
+  header.className =
+    "p-3 d-flex justify-content-between align-items-center nested-header";
 
   header.style.cursor = "pointer";
 
@@ -1084,22 +1019,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let roomPath = "";
 
-      // Main Building
       if (window.selectedBuilding === "main") {
         roomPath = "main/" + roomId;
-      }
-
-      // Criminology
-      else if (window.selectedBuilding === "criminology") {
+      } else if (window.selectedBuilding === "criminology") {
         const floorSelect = document.getElementById("newRoomFloor");
 
         const floor = floorSelect.value;
 
         roomPath = "criminology/" + floor + "/" + roomId;
-      }
-
-      // Other facilities
-      else {
+      } else if (
+        window.selectedBuilding.startsWith("bsit/") ||
+        window.selectedBuilding.startsWith("bsba/")
+      ) {
+        roomPath = window.selectedBuilding + "/" + roomId;
+      } else {
         message.innerHTML =
           '<div class="alert alert-info">' +
           "Room creation for this facility will be added next." +
@@ -1559,3 +1492,144 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   };
 });
+
+// ================================
+// Dashboard - Firebase Overview
+// ================================
+
+window.updateDashboardFromFirebase = function (data) {
+  const overview = document.getElementById("dashboardFacilityOverview");
+
+  if (!overview) {
+    return;
+  }
+
+  // ================================
+  // Facility Names
+  // ================================
+
+  const facilityNames = {
+    main: "Main Building",
+    criminology: "Criminology Department",
+    bsit: "BSIT Department",
+    bsba: "BSBA Department",
+    "basketball-court": "Covered Basketball Court",
+  };
+
+  // ================================
+  // Counters
+  // ================================
+
+  let totalRooms = 0;
+  let lightsOn = 0;
+
+  // ================================
+  // Count Rooms Recursively
+  // ================================
+
+  function countRooms(node) {
+    if (!node || typeof node !== "object") {
+      return;
+    }
+
+    // Check if this object contains electrical loads
+    let isRoom = false;
+
+    for (const key in node) {
+      const item = node[key];
+
+      if (
+        item &&
+        typeof item === "object" &&
+        (Object.prototype.hasOwnProperty.call(item, "state") ||
+          Object.prototype.hasOwnProperty.call(item, "label"))
+      ) {
+        isRoom = true;
+        break;
+      }
+    }
+
+    if (isRoom) {
+      totalRooms++;
+
+      if (node.lights && node.lights.state === true) {
+        lightsOn++;
+      }
+
+      return;
+    }
+
+    // Continue deeper
+    for (const key in node) {
+      if (node[key] && typeof node[key] === "object") {
+        countRooms(node[key]);
+      }
+    }
+  }
+
+  // Count all rooms
+  const activeFacilities = [
+    "main",
+    "criminology",
+    "bsit",
+    "bsba",
+    "basketball-court",
+  ];
+
+  for (const buildingId of activeFacilities) {
+    if (data[buildingId]) {
+      countRooms(data[buildingId]);
+    }
+  }
+
+  // ================================
+  // Update Statistics
+  // ================================
+
+  const totalRoomsElement = document.getElementById("totalRoomsCount");
+
+  if (totalRoomsElement) {
+    totalRoomsElement.textContent = totalRooms;
+  }
+
+  const lightsOnElement = document.getElementById("lightsOnCount");
+
+  if (lightsOnElement) {
+    lightsOnElement.textContent = lightsOn;
+  }
+
+  // ================================
+  // Build Facility Overview
+  // ================================
+
+  overview.innerHTML = "";
+
+  for (const facilityId in facilityNames) {
+    if (!data[facilityId]) {
+      continue;
+    }
+
+    const facility = document.createElement("div");
+
+    facility.className = "room-item";
+
+    const name = document.createElement("span");
+
+    name.className = "room-name";
+
+    name.textContent = facilityNames[facilityId];
+
+    const status = document.createElement("span");
+
+    status.className = "dashboard-status-switch";
+
+    status.innerHTML =
+      '<span class="dashboard-switch-text">ONLINE</span>' +
+      '<span class="dashboard-switch-knob"></span>';
+
+    facility.appendChild(name);
+    facility.appendChild(status);
+
+    overview.appendChild(facility);
+  }
+};

@@ -488,3 +488,39 @@ body{
 .content h5 {
   color: #202124;
 }
+
+/* ================================
+   Dashboard Facility Status
+   ================================ */
+
+.dashboard-status-switch {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  width: 110px;
+  height: 38px;
+  padding-left: 42px;
+  border-radius: 20px;
+  background-color: #198754;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.dashboard-switch-knob {
+  position: absolute;
+  right: 4px;
+  left: auto;
+  top: 4px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.dashboard-switch-text {
+  position: absolute;
+  left: 14px;
+  line-height: 1;
+}

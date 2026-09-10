@@ -105,7 +105,7 @@
 
                   <h6 class="text-muted">Total Rooms</h6>
 
-                  <h2>12</h2>
+                  <h2 id="totalRoomsCount">0</h2>
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@
 
                   <h6 class="text-muted">Energy Today</h6>
 
-                  <h2>27.8 kWh</h2>
+                  <h2 id="energyToday">0.0 kWh</h2>
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@
 
                   <h6 class="text-muted">Alerts</h6>
 
-                  <h2>1</h2>
+                  <h2 id="alertsCount">0</h2>
                 </div>
               </div>
             </div>
@@ -164,48 +164,11 @@
               <div class="card-body">
                 <h4 class="mb-4">Facility Overview</h4>
 
-                <!-- Registrar Office -->
-
-                <div class="room-item">
-                  <span class="room-name"> Registrar Office </span>
-
-                  <span id="registrarStatus" class="status-switch on">
-                    <span class="switch-knob"></span>
-                    <span class="switch-text">ON</span>
-                  </span>
-                </div>
-
-                <!-- Library -->
-
-                <div class="room-item">
-                  <span class="room-name"> Library </span>
-
-                  <span id="libraryStatus" class="status-switch off">
-                    <span class="switch-knob"></span>
-                    <span class="switch-text">OFF</span>
-                  </span>
-                </div>
-
-                <!-- Computer Laboratory -->
-
-                <div class="room-item">
-                  <span class="room-name"> Computer Laboratory </span>
-
-                  <span id="computerStatus" class="status-switch on">
-                    <span class="switch-knob"></span>
-                    <span class="switch-text">ON</span>
-                  </span>
-                </div>
-
-                <!-- Guidance Office -->
-
-                <div class="room-item">
-                  <span class="room-name"> Guidance Office </span>
-
-                  <span id="guidanceStatus" class="status-switch on">
-                    <span class="switch-knob"></span>
-                    <span class="switch-text">ON</span>
-                  </span>
+                <div id="dashboardFacilityOverview">
+                  <div class="text-center text-muted py-4">
+                    <div class="spinner-border mb-2" role="status"></div>
+                    <p class="mb-0">Loading facility status...</p>
+                  </div>
                 </div>
               </div>
             </div>

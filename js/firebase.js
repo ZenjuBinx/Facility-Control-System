@@ -117,6 +117,10 @@ onValue(ref(database, "buildings"), function (snapshot) {
     window.updateBuildingsFromFirebase(data);
   }
 
+  if (window.updateDashboardFromFirebase) {
+    window.updateDashboardFromFirebase(data);
+  }
+
   // Update Settings page
   if (document.getElementById("roomSelect")) {
     updateLoadOptions();
