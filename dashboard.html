@@ -119,9 +119,8 @@
                     <i class="bi bi-lightbulb-fill"></i>
                   </div>
 
-                  <h6 class="text-muted">Lights ON</h6>
-
-                  <h2 id="lightsOnCount">0</h2>
+                  <h6 class="text-muted">Active Loads</h6>
+                  <h2 id="activeLoadsCount">0</h2>
                 </div>
               </div>
             </div>
@@ -168,6 +167,44 @@
                   <div class="text-center text-muted py-4">
                     <div class="spinner-border mb-2" role="status"></div>
                     <p class="mb-0">Loading facility status...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-4">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-4"
+                >
+                  <h4 class="mb-0">Active Loads</h4>
+                  <span class="badge bg-success" id="activeLoadsBadge"
+                    >0 ON</span
+                  >
+                </div>
+
+                <div id="activeLoadsList">
+                  <div class="text-center text-muted py-4">
+                    <div class="spinner-border mb-2" role="status"></div>
+                    <p class="mb-0">Loading active loads...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-4 mb-4">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-4"
+                >
+                  <h4 class="mb-0">Alerts</h4>
+                  <span class="badge bg-secondary" id="dashboardAlertsBadge"
+                    >0</span
+                  >
+                </div>
+
+                <div id="dashboardAlertsList">
+                  <div class="text-center text-muted py-4">
+                    <i class="bi bi-shield-check fs-2 d-block mb-2"></i>
+                    <p class="mb-0">No alerts</p>
                   </div>
                 </div>
               </div>

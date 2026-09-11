@@ -162,7 +162,9 @@ window.updateRoomFromFirebase = function (room, data) {
 
     updateRoom(room);
 
-    updateLightsOnCount();
+    if (typeof updateLightsOnCount === "function") {
+      updateLightsOnCount();
+    }
 
     return;
   }
@@ -246,7 +248,7 @@ function updateLoad(room, load, state, label) {
 // Dashboard - Lights ON Counter
 // ================================
 
-function updateLightsOnCount() {
+function updateLightsOnCountFromBuildings(data) {
   const counter = document.getElementById("lightsOnCount");
 
   if (!counter) {
@@ -255,13 +257,43 @@ function updateLightsOnCount() {
 
   let count = 0;
 
-  for (const room in rooms) {
-    const roomData = rooms[room];
+  const activeFacilities = [
+    "main",
+    "criminology",
+    "bsit",
+    "bsba",
+    "basketball-court",
+  ];
 
-    if (typeof roomData === "object" && roomData !== null && roomData.lights) {
-      if (roomData.lights.state === true) {
+  function countLights(node) {
+    if (!node || typeof node !== "object") {
+      return;
+    }
+
+    // This is a room/load object
+    if (
+      node.lights &&
+      typeof node.lights === "object" &&
+      Object.prototype.hasOwnProperty.call(node.lights, "state")
+    ) {
+      if (node.lights.state === true) {
         count++;
       }
+
+      return;
+    }
+
+    // Continue looking through nested buildings/floors/rooms
+    for (const key in node) {
+      if (node[key] && typeof node[key] === "object") {
+        countLights(node[key]);
+      }
+    }
+  }
+
+  for (const facilityId of activeFacilities) {
+    if (data[facilityId]) {
+      countLights(data[facilityId]);
     }
   }
 
@@ -1516,6 +1548,28 @@ window.updateDashboardFromFirebase = function (data) {
     "basketball-court": "Covered Basketball Court",
   };
 
+  function countActiveLoads(object) {
+    if (!object || typeof object !== "object") {
+      return 0;
+    }
+
+    let count = 0;
+
+    for (const key in object) {
+      const item = object[key];
+
+      if (item && typeof item === "object" && typeof item.state === "boolean") {
+        if (item.state === true) {
+          count++;
+        }
+      } else if (item && typeof item === "object") {
+        count += countActiveLoads(item);
+      }
+    }
+
+    return count;
+  }
+
   // ================================
   // Counters
   // ================================
@@ -1619,17 +1673,236 @@ window.updateDashboardFromFirebase = function (data) {
 
     name.textContent = facilityNames[facilityId];
 
-    const status = document.createElement("span");
+    const activeCount = countActiveLoads(data[facilityId]);
 
-    status.className = "dashboard-status-switch";
+    const status = document.createElement("div");
+    status.className = "dashboard-load-status";
 
-    status.innerHTML =
-      '<span class="dashboard-switch-text">ONLINE</span>' +
-      '<span class="dashboard-switch-knob"></span>';
+    if (activeCount > 0) {
+      status.textContent =
+        activeCount + (activeCount === 1 ? " Load ON" : " Loads ON");
+    } else {
+      status.textContent = "All Loads OFF";
+    }
 
     facility.appendChild(name);
     facility.appendChild(status);
 
     overview.appendChild(facility);
   }
+};
+
+window.updateActiveLoadsFromBuildings = function (data) {
+  const countElement = document.getElementById("activeLoadsCount");
+
+  if (!countElement) return;
+
+  const activeFacilities = [
+    "main",
+    "criminology",
+    "bsit",
+    "bsba",
+    "basketball-court",
+  ];
+
+  let activeLoadCount = 0;
+
+  function scanObject(object) {
+    if (!object || typeof object !== "object") return;
+
+    for (const key in object) {
+      const item = object[key];
+
+      if (item && typeof item === "object" && typeof item.state === "boolean") {
+        if (item.state === true) {
+          activeLoadCount++;
+        }
+      } else if (item && typeof item === "object") {
+        scanObject(item);
+      }
+    }
+  }
+
+  for (const facilityId of activeFacilities) {
+    if (data[facilityId]) {
+      scanObject(data[facilityId]);
+    }
+  }
+
+  countElement.textContent = activeLoadCount;
+};
+
+window.updateActiveLoadsList = function (data) {
+  const listElement = document.getElementById("activeLoadsList");
+  const badgeElement = document.getElementById("activeLoadsBadge");
+
+  if (!listElement) return;
+
+  const activeFacilities = [
+    "main",
+    "criminology",
+    "bsit",
+    "bsba",
+    "basketball-court",
+  ];
+
+  const activeLoads = [];
+
+  const facilityNames = {
+    main: "Main Building",
+    criminology: "Criminology Department",
+    bsit: "BSIT Department",
+    bsba: "BSBA Department",
+    "basketball-court": "Covered Basketball Court",
+  };
+
+  function scanObject(object, path) {
+    if (!object || typeof object !== "object") return;
+
+    for (const key in object) {
+      const item = object[key];
+
+      if (item && typeof item === "object" && typeof item.state === "boolean") {
+        if (item.state === true) {
+          activeLoads.push({
+            path: path.concat(key),
+            label: item.label || formatName(key),
+          });
+        }
+      } else if (item && typeof item === "object") {
+        scanObject(item, path.concat(key));
+      }
+    }
+  }
+
+  for (const facilityId of activeFacilities) {
+    if (data[facilityId]) {
+      scanObject(data[facilityId], [facilityId]);
+    }
+  }
+
+  // Update badge
+  badgeElement.textContent = activeLoads.length + " ON";
+
+  // No active loads
+  if (activeLoads.length === 0) {
+    listElement.innerHTML =
+      '<div class="text-center text-muted py-4">' +
+      '<i class="bi bi-check-circle fs-2 d-block mb-2"></i>' +
+      '<p class="mb-0">No active loads</p>' +
+      "</div>";
+
+    return;
+  }
+
+  listElement.innerHTML = "";
+
+  activeLoads.forEach(function (load) {
+    const path = load.path;
+    const facilityId = path[0];
+
+    let roomName = "";
+
+    if (facilityId === "main") {
+      roomName = formatName(path[1]);
+    } else if (facilityId === "criminology") {
+      roomName = formatName(path[1]) + " - " + formatName(path[2]);
+    } else if (facilityId === "bsit" || facilityId === "bsba") {
+      roomName = formatName(path[1]) + " - " + formatName(path[2]);
+    } else if (facilityId === "basketball-court") {
+      roomName = "Covered Basketball Court";
+    }
+
+    const row = document.createElement("div");
+    row.className =
+      "d-flex justify-content-between align-items-center border-bottom py-3";
+
+    const info = document.createElement("div");
+
+    const facility = document.createElement("div");
+    facility.className = "fw-semibold";
+    facility.textContent = facilityNames[facilityId] || formatName(facilityId);
+
+    const room = document.createElement("div");
+    room.className = "text-muted small";
+    room.textContent = roomName;
+
+    const loadElement = document.createElement("div");
+    loadElement.className = "small mt-1";
+
+    const loadIcon = document.createElement("i");
+    loadIcon.className = "bi bi-lightning-charge-fill me-1";
+
+    loadElement.appendChild(loadIcon);
+    loadElement.appendChild(document.createTextNode(load.label));
+
+    info.appendChild(facility);
+    info.appendChild(room);
+    info.appendChild(loadElement);
+
+    const status = document.createElement("span");
+    status.className = "badge bg-success";
+    status.textContent = "ON";
+
+    row.appendChild(info);
+    row.appendChild(status);
+
+    listElement.appendChild(row);
+  });
+};
+
+window.updateDashboardAlerts = function (data) {
+  const badge = document.getElementById("dashboardAlertsBadge");
+  const list = document.getElementById("dashboardAlertsList");
+  const counter = document.getElementById("alertsCount");
+
+  if (!badge || !list) return;
+
+  const alerts = data || {};
+  const alertKeys = Object.keys(alerts);
+
+  // Update counters
+  badge.textContent = alertKeys.length;
+
+  if (counter) {
+    counter.textContent = alertKeys.length;
+  }
+
+  // No alerts
+  if (alertKeys.length === 0) {
+    list.innerHTML =
+      '<div class="text-center text-muted py-4">' +
+      '<i class="bi bi-shield-check fs-2 d-block mb-2"></i>' +
+      '<p class="mb-0">No alerts</p>' +
+      "</div>";
+
+    return;
+  }
+
+  // Display alerts
+  list.innerHTML = "";
+
+  alertKeys.forEach(function (alertId) {
+    const alert = alerts[alertId];
+
+    if (!alert || typeof alert !== "object") {
+      return;
+    }
+
+    const row = document.createElement("div");
+    row.className = "border-bottom py-3";
+
+    const title = document.createElement("div");
+    title.className = "fw-semibold";
+    title.textContent = alert.title || "System Alert";
+
+    const message = document.createElement("div");
+    message.className = "small text-muted";
+    message.textContent = alert.message || "";
+
+    row.appendChild(title);
+    row.appendChild(message);
+
+    list.appendChild(row);
+  });
 };

@@ -117,6 +117,14 @@ onValue(ref(database, "buildings"), function (snapshot) {
     window.updateBuildingsFromFirebase(data);
   }
 
+  if (window.updateActiveLoadsFromBuildings) {
+    window.updateActiveLoadsFromBuildings(data);
+  }
+
+  if (window.updateActiveLoadsList) {
+    window.updateActiveLoadsList(data);
+  }
+
   if (window.updateDashboardFromFirebase) {
     window.updateDashboardFromFirebase(data);
   }
@@ -218,3 +226,15 @@ window.deleteBuildingRoomFromFirebase = function (path) {
 
   return remove(roomRef);
 };
+
+// ================================
+// Firebase → Dashboard Alerts
+// ================================
+
+onValue(ref(database, "alerts"), function (snapshot) {
+  const data = snapshot.val() || {};
+
+  if (window.updateDashboardAlerts) {
+    window.updateDashboardAlerts(data);
+  }
+});
