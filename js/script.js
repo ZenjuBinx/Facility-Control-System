@@ -470,14 +470,16 @@ function createBuildingCard(
   expandButton.innerHTML = '<i class="bi bi-chevron-down"></i>';
 
   // Management (+) Button
-
   const manageButton = document.createElement("button");
 
   manageButton.className = "btn btn-sm btn-outline-primary ms-2";
-
   manageButton.innerHTML = '<i class="bi bi-plus-lg"></i>';
-
   manageButton.title = "Manage rooms";
+
+  // Only Admins can manage facilities
+  if (window.currentUserRole !== "admin") {
+    manageButton.style.display = "none";
+  }
 
   manageButton.onclick = function (event) {
     event.stopPropagation();
@@ -782,12 +784,19 @@ function createRoomCard(roomId, roomName, roomData, roomPath) {
   const deleteButton = document.createElement("button");
 
   deleteButton.className = "btn btn-sm btn-outline-danger";
-
   deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
-
   deleteButton.title = "Delete room";
 
+  // Only Admins can delete rooms
+  if (window.currentUserRole !== "admin") {
+    deleteButton.style.display = "none";
+  }
+
   deleteButton.onclick = function () {
+    if (typeof window.isAdmin !== "function" || !window.isAdmin()) {
+      alert("Administrator access is required.");
+      return;
+    }
     const confirmed = confirm(
       'Are you sure you want to delete "' + roomName + '"?',
     );
@@ -987,6 +996,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   addRoomButton.onclick = function () {
+    if (typeof window.isAdmin !== "function" || !window.isAdmin()) {
+      alert("Administrator access is required.");
+      return;
+    }
+
     const managementModal = document.getElementById("roomManagementModal");
 
     const addRoomModal = document.getElementById("addRoomModal");
@@ -1231,6 +1245,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   manageLoadsButton.onclick = function () {
+    if (typeof window.isAdmin !== "function" || !window.isAdmin()) {
+      alert("Administrator access is required.");
+      return;
+    }
     const managementModal = document.getElementById("roomManagementModal");
 
     const manageLoadsModal = document.getElementById("manageLoadsModal");
@@ -1446,6 +1464,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   saveButton.onclick = function () {
+    if (typeof window.isAdmin !== "function" || !window.isAdmin()) {
+      alert("Administrator access is required.");
+      return;
+    }
     const roomSelect = document.getElementById("manageRoomSelect");
 
     const loadSelect = document.getElementById("manageLoadSelect");
@@ -1906,3 +1928,13 @@ window.updateDashboardAlerts = function (data) {
     list.appendChild(row);
   });
 };
+
+// Refresh interface after Firebase Authentication role is loaded
+window.addEventListener("userRoleReady", function () {
+  if (
+    window.buildingsData &&
+    typeof window.updateBuildingsFromFirebase === "function"
+  ) {
+    window.updateBuildingsFromFirebase(window.buildingsData);
+  }
+});

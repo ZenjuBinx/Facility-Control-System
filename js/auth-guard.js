@@ -10,8 +10,16 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-// Use the existing Firebase app if it already exists.
-// Otherwise initialize Firebase.
+import {
+  getDatabase,
+  ref,
+  get,
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+// ==========================================
+// FIREBASE
+// ==========================================
+
 let app;
 
 if (getApps().length > 0) {
@@ -20,7 +28,7 @@ if (getApps().length > 0) {
   const firebaseConfig = {
     // USE THE SAME FIREBASE CONFIG FROM firebase.js
 
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyCuoG74aj_G0BR4Jw2C_AvETI39hTq9Zdg",
     authDomain: "tcc-facility-electrical-system.firebaseapp.com",
     databaseURL:
       "https://tcc-facility-electrical-system-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -32,19 +40,92 @@ if (getApps().length > 0) {
 
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, function (user) {
+const database = getDatabase(
+  app,
+  "https://tcc-facility-electrical-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+);
+
+// ==========================================
+// CHECK LOGIN + USER ROLE
+// ==========================================
+
+onAuthStateChanged(auth, async function (user) {
   if (!user) {
     window.location.href = "index.html";
+    return;
   }
+
+  try {
+    const userRef = ref(database, "users/" + user.uid);
+
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+
+      // Make the user information available
+      // to the rest of the website.
+      window.currentUser = user;
+      window.currentUserData = userData;
+      window.currentUserRole = userData.role || "user";
+
+      // Settings is for Admins only
+      if (
+        window.location.pathname.endsWith("settings.html") &&
+        window.currentUserRole !== "admin"
+      ) {
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      console.log("Logged in user:", userData);
+      console.log("User role:", window.currentUserRole);
+    } else {
+      console.warn("No user profile found in Realtime Database.");
+
+      // Default to regular user
+      window.currentUser = user;
+      window.currentUserData = {
+        name: user.displayName || "",
+        email: user.email || "",
+        role: "user",
+      };
+
+      window.currentUserRole = "user";
+    }
+  } catch (error) {
+    console.error("Failed to load user role:", error);
+
+    // If the role cannot be loaded,
+    // treat the account as a regular user.
+    window.currentUser = user;
+    window.currentUserRole = "user";
+  }
+
+  // Tell the interface that the user's role is ready
+  window.dispatchEvent(new Event("userRoleReady"));
 });
 
+// ==========================================
 // LOGOUT
+// ==========================================
+
 window.logoutUser = async function () {
   try {
     await signOut(auth);
+
     window.location.href = "index.html";
   } catch (error) {
     console.error("Logout error:", error);
+
     alert("Unable to log out. Please try again.");
   }
+};
+
+// ==========================================
+// ROLE CHECK
+// ==========================================
+
+window.isAdmin = function () {
+  return window.currentUserRole === "admin";
 };

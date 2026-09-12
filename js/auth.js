@@ -4,7 +4,14 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  set,
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
@@ -21,6 +28,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(
+  app,
+  "https://tcc-facility-electrical-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+);
 
 // ==========================================
 // REGISTRATION
@@ -80,6 +91,12 @@ if (registerButton) {
       // Save user's full name
       await updateProfile(user, {
         displayName: name,
+      });
+
+      await set(ref(database, "users/" + user.uid), {
+        name: name,
+        email: email,
+        role: "user",
       });
 
       message.innerHTML =
@@ -255,7 +272,7 @@ if (forgotLink) {
 // LOGOUT
 window.logoutUser = async function () {
   try {
-    await auth.signOut();
+    await signOut(auth);
     window.location.href = "index.html";
   } catch (error) {
     console.error("Logout error:", error);
