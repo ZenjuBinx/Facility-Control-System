@@ -85,6 +85,15 @@
 
             Settings
           </a>
+
+          <button
+            type="button"
+            class="btn btn-outline-danger w-100 mt-3"
+            onclick="logoutUser()"
+          >
+            <i class="bi bi-box-arrow-right"></i>
+            Logout
+          </button>
         </div>
 
         <!-- Main Content -->
@@ -216,5 +225,10 @@
         </div>
       </div>
     </div>
+    <script src="js/script.js"></script>
+
+    <script type="module" src="js/firebase.js"></script>
+
+    <script type="module" src="js/auth-guard.js"></script>
   </body>
 </html>

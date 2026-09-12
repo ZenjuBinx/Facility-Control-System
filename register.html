@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Facility Electrical Control System</title>
+    <title>Create Account - Facility Electrical Control System</title>
 
     <!-- Bootstrap CSS -->
     <link
@@ -26,7 +26,6 @@
     <div class="container-fluid vh-100">
       <div class="row h-100">
         <!-- LEFT PANEL -->
-
         <div class="col-lg-7 left-panel d-none d-lg-flex">
           <div class="left-content text-center">
             <img
@@ -47,39 +46,50 @@
 
             <div class="version">
               Version 1.0
-
               <br />
-
               © 2026 Torres Capitol College, Inc.
             </div>
           </div>
         </div>
 
         <!-- RIGHT PANEL -->
-
         <div class="col-lg-5 d-flex justify-content-center align-items-center">
           <div class="login-card">
-            <h2 class="text-center mb-4">Welcome Back</h2>
+            <h2 class="text-center mb-2">Create Account</h2>
 
-            <p class="text-center text-muted mb-4">Sign in to continue</p>
+            <p class="text-center text-muted mb-4">
+              Register a new system account
+            </p>
 
-            <!-- Username -->
-
+            <!-- Full Name -->
             <div class="input-group mb-3">
               <span class="input-group-text">
                 <i class="bi bi-person-fill"></i>
               </span>
 
               <input
+                type="text"
+                id="registerName"
+                class="form-control"
+                placeholder="Full Name"
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">
+                <i class="bi bi-envelope-fill"></i>
+              </span>
+
+              <input
                 type="email"
-                id="loginEmail"
+                id="registerEmail"
                 class="form-control"
                 placeholder="Email Address"
               />
             </div>
 
             <!-- Password -->
-
             <div class="input-group mb-3">
               <span class="input-group-text">
                 <i class="bi bi-lock-fill"></i>
@@ -87,7 +97,7 @@
 
               <input
                 type="password"
-                id="password"
+                id="registerPassword"
                 class="form-control"
                 placeholder="Password"
               />
@@ -95,42 +105,42 @@
               <button
                 class="btn btn-outline-secondary"
                 type="button"
-                onclick="togglePassword()"
+                id="toggleRegisterPassword"
               >
                 <i class="bi bi-eye-fill"></i>
               </button>
             </div>
 
-            <!-- Remember -->
+            <!-- Confirm Password -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">
+                <i class="bi bi-shield-lock-fill"></i>
+              </span>
 
-            <div class="d-flex justify-content-between mb-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember" />
-
-                <label class="form-check-label" for="remember">
-                  Remember Me
-                </label>
-              </div>
-
-              <a href="#" class="forgot-link"> Forgot Password? </a>
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                placeholder="Confirm Password"
+              />
             </div>
 
-            <!-- Login Message -->
-            <div id="loginMessage"></div>
+            <!-- Message -->
+            <div id="registerMessage"></div>
 
-            <!-- Login Button -->
-
+            <!-- Register Button -->
             <button
-              id="loginButton"
+              id="registerButton"
               class="btn btn-primary w-100 login-btn"
               type="button"
             >
-              Login
+              Create Account
             </button>
 
+            <!-- Login Link -->
             <p class="text-center mt-4 mb-0">
-              Don't have an account?
-              <a href="register.html" class="forgot-link"> Create Account </a>
+              Already have an account?
+              <a href="index.html" class="forgot-link"> Sign In </a>
             </p>
           </div>
         </div>
@@ -138,12 +148,7 @@
     </div>
 
     <!-- Bootstrap JS -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JS -->
-
-    <script src="js/script.js"></script>
 
     <!-- Authentication JS -->
     <script type="module" src="js/auth.js"></script>
